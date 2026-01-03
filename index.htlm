@@ -1,0 +1,422 @@
+<html lang="pt-pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CCL - Centro de Ciências de Luanda</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #020617;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        .animate-pulse-slow {
+            animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.3; }
+        }
+
+        .bg-pattern {
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+        }
+
+        .wave-bar {
+            transition: height 0.3s ease-out, background-color 0.3s ease;
+        }
+        
+        input[type=range] {
+            accent-color: #f59e0b;
+        }
+
+        /* Glassmorphism Classes */
+        .glass {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(51, 65, 85, 0.4);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #020617;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="selection:bg-cyan-500/30 selection:text-cyan-200">
+
+    <!-- SCREENSAVER -->
+    <div id="screensaver" class="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-slate-950 cursor-pointer overflow-hidden transition-opacity duration-700">
+        <div class="absolute inset-0 bg-pattern opacity-10 animate-pulse-slow"></div>
+        <div class="z-10 text-center space-y-8">
+            <div class="inline-block p-4 border-2 border-cyan-500/50 rounded-full animate-spin" style="animation-duration: 8s;">
+                <i data-lucide="atom" class="w-20 h-20 text-cyan-400"></i>
+            </div>
+            <h1 class="text-7xl md:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500 tracking-tighter uppercase">CCL</h1>
+            <p class="text-xl md:text-3xl text-slate-300 font-light tracking-widest uppercase">Museu Digital de Ciência & Cultura</p>
+            <div class="mt-12 animate-bounce text-white/50 text-sm">Toque para Explorar</div>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD -->
+    <main id="dashboard" class="hidden min-h-screen p-6 md:p-12 pb-24">
+        <header class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 border-b border-slate-800 pb-6 gap-4">
+            <div>
+                <h1 class="text-4xl md:text-6xl font-black text-white tracking-tighter mb-2 italic">Afrokódica<span class="text-cyan-500">.</span>Systems</h1>
+                <p class="text-slate-400 text-lg max-w-xl font-light">Conectando o conhecimento ancestral ao futuro tecnológico de Angola.</p>
+            </div>
+            <div class="text-right">
+                <div id="clock" class="text-cyan-400 font-mono text-2xl">00:00:00</div>
+                <div class="text-slate-500 text-sm uppercase tracking-widest">Luanda | Pavilhão Central</div>
+            </div>
+        </header>
+
+        <div id="grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <!-- Cards gerados via JS -->
+        </div>
+    </main>
+
+    <!-- MÓDULO 01: INTERFACE DO PAVILHÃO DIGITAL -->
+    <section id="module-01-view" class="hidden fixed inset-0 z-[100] bg-slate-950 overflow-y-auto">
+        <!-- Navegação Interna -->
+        <nav class="p-6 flex justify-between items-center border-b border-slate-800 sticky top-0 bg-slate-950/95 backdrop-blur-md z-[110]">
+            <div class="flex items-center gap-6">
+                <button onclick="backToDashboard()" class="p-2 hover:bg-slate-800 rounded-full transition-colors text-slate-400 hover:text-white">
+                    <i data-lucide="chevron-left" class="w-8 h-8"></i>
+                </button>
+                <div>
+                    <h2 class="text-2xl font-black text-white leading-none">CIÊNCIA VIVA ANGOLA</h2>
+                    <span class="text-[10px] text-amber-500 font-bold uppercase tracking-[0.3em]">Pavilhão de Acústica e Fluidos</span>
+                </div>
+            </div>
+            
+            <div class="flex gap-4">
+                <button onclick="toggleTeacherMode(true)" class="flex items-center gap-2 px-4 py-2 border border-slate-700 rounded-lg text-xs font-bold text-slate-400 hover:border-amber-500 hover:text-amber-500 transition-all">
+                    <i data-lucide="graduation-cap" class="w-4 h-4"></i> MODO PROFESSOR
+                </button>
+            </div>
+        </nav>
+
+        <div class="max-w-7xl mx-auto p-6 md:p-12">
+            <!-- Introdução do Museu -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20 items-center">
+                <div class="lg:col-span-7">
+                    <h3 class="text-amber-500 font-mono text-sm mb-4 uppercase tracking-widest">Exposição 01: A Física do Batuque</h3>
+                    <h1 class="text-5xl md:text-8xl font-black text-white mb-6 leading-[0.9]">O Ritmo da <br><span class="text-amber-500">Mecânica.</span></h1>
+                    <p class="text-slate-400 text-xl leading-relaxed">
+                        Como é que um artesão em Cabinda afina um tambor sem osciloscópios? Ele usa a percepção das ondas estacionárias. Aqui, traduzimos essa arte em dados.
+                    </p>
+                </div>
+                <div class="lg:col-span-5 bg-slate-900/50 p-6 rounded-3xl border border-slate-800">
+                    <div class="flex items-center gap-4 mb-4">
+                        <div class="p-3 bg-amber-500/20 text-amber-500 rounded-2xl"><i data-lucide="book-open"></i></div>
+                        <h4 class="font-bold">Guia Rápido</h4>
+                    </div>
+                    <ul class="space-y-3 text-sm text-slate-500">
+                        <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Ajuste a tensão para mudar a frequência.</li>
+                        <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Observe a amplitude no gráfico lateral.</li>
+                        <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Compare com os sons da natureza angolana.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SIMULADOR INTERATIVO EXPANDIDO -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-20">
+                <!-- Controlos de Laboratório -->
+                <div class="glass p-8 rounded-3xl flex flex-col gap-8 h-fit">
+                    <h3 class="text-white font-bold flex items-center gap-2">
+                        <i data-lucide="sliders" class="w-5 h-5 text-amber-500"></i> Consola de Física
+                    </h3>
+                    
+                    <div class="space-y-8">
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-end">
+                                <label class="text-xs text-slate-500 uppercase font-bold tracking-tighter">Elasticidade da Pele</label>
+                                <span id="val-tension" class="text-2xl font-mono text-amber-500 font-black">50</span>
+                            </div>
+                            <input type="range" id="input-tension" min="10" max="250" value="50" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer">
+                        </div>
+
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-end">
+                                <label class="text-xs text-slate-500 uppercase font-bold tracking-tighter">Volume da Caixa (Cm³)</label>
+                                <span id="val-size" class="text-2xl font-mono text-amber-500 font-black">30</span>
+                            </div>
+                            <input type="range" id="input-size" min="10" max="100" value="30" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                    </div>
+
+                    <div class="mt-4 p-4 bg-black/40 rounded-2xl border border-white/5">
+                        <span class="text-[10px] text-slate-500 block mb-1">CÁLCULO EM TEMPO REAL</span>
+                        <div class="text-3xl font-mono font-bold text-emerald-400" id="val-freq">120.4 Hz</div>
+                    </div>
+
+                    <button onclick="playPulse()" class="group relative py-6 bg-amber-500 text-slate-950 font-black rounded-2xl overflow-hidden transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-amber-500/20">
+                        <span class="relative z-10 flex items-center justify-center gap-2 uppercase tracking-tighter text-lg">
+                            <i data-lucide="zap" class="fill-current"></i> Golpear Membrana
+                        </span>
+                        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform"></div>
+                    </button>
+                </div>
+
+                <!-- Visualização de Alta Fidelidade -->
+                <div class="lg:col-span-3 glass rounded-3xl overflow-hidden relative min-h-[500px] flex flex-col items-center justify-center p-8">
+                    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-amber-500/5 to-transparent"></div>
+                    
+                    <!-- Diagrama do Tambor Simulado -->
+                    <div class="relative z-10 w-64 h-64 md:w-80 md:h-80 rounded-full border-[12px] border-slate-800 shadow-[0_0_80px_rgba(245,158,11,0.1)] flex items-center justify-center">
+                        <div id="drum-surface" class="w-full h-full rounded-full bg-slate-900 flex items-center justify-center overflow-hidden">
+                            <!-- Animação de Ondas Circulares -->
+                            <div id="wave-ripple" class="absolute w-4 h-4 bg-amber-500/40 rounded-full opacity-0"></div>
+                            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/leather.png')] opacity-30"></div>
+                        </div>
+                        <div class="absolute -top-4 bg-slate-800 px-4 py-1 rounded-full text-[10px] font-bold text-slate-400 border border-slate-700">PONTO DE IMPACTO</div>
+                    </div>
+
+                    <!-- Espectrograma -->
+                    <div id="wave-container" class="relative z-10 mt-12 flex items-end gap-1 h-32 w-full max-w-2xl px-4">
+                        <!-- Gerado por JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODO PROFESSOR OVERLAY -->
+        <div id="teacher-overlay" class="hidden fixed inset-0 z-[150] bg-slate-950/98 backdrop-blur-2xl flex items-center justify-center p-6">
+            <div class="max-w-4xl w-full bg-slate-900 rounded-[3rem] border border-amber-500/30 overflow-hidden shadow-2xl flex flex-col h-[80vh]">
+                <div class="p-8 bg-amber-500 flex justify-between items-center">
+                    <div class="flex items-center gap-4 text-slate-950">
+                        <i data-lucide="graduation-cap" class="w-10 h-10"></i>
+                        <div>
+                            <h2 class="text-2xl font-black leading-none uppercase">Consola de Curadoria Pedagógica</h2>
+                            <p class="text-xs font-bold opacity-80 uppercase tracking-widest">Módulo 01: Física & Ancestralidade</p>
+                        </div>
+                    </div>
+                    <button onclick="toggleTeacherMode(false)" class="p-2 hover:bg-black/10 rounded-full transition-colors">
+                        <i data-lucide="x" class="w-8 h-8 text-slate-950"></i>
+                    </button>
+                </div>
+                
+                <div class="p-12 overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div class="space-y-8 text-slate-300">
+                        <section>
+                            <h4 class="text-amber-500 font-bold mb-2 flex items-center gap-2"><i data-lucide="info"></i> Objetivos de Aprendizagem</h4>
+                            <ul class="space-y-4 text-sm leading-relaxed">
+                                <li class="flex gap-3"><span class="text-amber-500 font-bold">1.</span> Compreender a relação entre tensão e frequência em membranas.</li>
+                                <li class="flex gap-3"><span class="text-amber-500 font-bold">2.</span> Identificar a aplicação prática da matemática na música tradicional angolana.</li>
+                                <li class="flex gap-3"><span class="text-amber-500 font-bold">3.</span> Valorizar o conhecimento dos mestres artesãos como ciência aplicada.</li>
+                            </ul>
+                        </section>
+                        <section>
+                            <h4 class="text-amber-500 font-bold mb-2 flex items-center gap-2"><i data-lucide="file-text"></i> Recursos Didáticos</h4>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button class="p-4 bg-slate-800 rounded-2xl text-xs hover:bg-slate-700 transition-colors text-left border border-slate-700">Baixar Guia PDF (Física)</button>
+                                <button class="p-4 bg-slate-800 rounded-2xl text-xs hover:bg-slate-700 transition-colors text-left border border-slate-700">Quiz de Avaliação (Digital)</button>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="bg-black/40 p-8 rounded-3xl border border-white/5 space-y-6">
+                        <h4 class="text-white font-bold">Controlo do Pavilhão</h4>
+                        <div class="space-y-4">
+                            <label class="flex items-center justify-between p-4 bg-slate-800/50 rounded-xl cursor-pointer">
+                                <span class="text-xs text-slate-400">Ativar Legendas Científicas</span>
+                                <input type="checkbox" checked class="w-5 h-5 accent-amber-500">
+                            </label>
+                            <label class="flex items-center justify-between p-4 bg-slate-800/50 rounded-xl cursor-pointer">
+                                <span class="text-xs text-slate-400">Modo Audição de Alta Precisão</span>
+                                <input type="checkbox" class="w-5 h-5 accent-amber-500">
+                            </label>
+                        </div>
+                        <div class="pt-6 border-t border-slate-800">
+                            <p class="text-[10px] text-slate-500 italic">"O professor não apenas ensina, ele desbloqueia a curiosidade científica através do contexto cultural." — Afrokódica Edu</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL DE TRANSIÇÃO (PREVIEW) -->
+    <div id="modal" class="fixed inset-0 z-[60] hidden bg-slate-950/90 backdrop-blur-xl flex items-center justify-center p-4">
+        <div class="bg-slate-900 w-full max-w-4xl rounded-[2.5rem] border border-slate-700 shadow-2xl overflow-hidden flex flex-col md:flex-row relative">
+            <button onclick="closeModal()" class="absolute top-6 right-6 z-50 p-2 bg-slate-800 hover:bg-red-500/20 text-white rounded-full transition-all"><i data-lucide="x"></i></button>
+            <div id="modal-left" class="w-full md:w-1/2 p-12 flex flex-col items-center justify-center border-r border-slate-800 bg-slate-950">
+                <div id="modal-icon" class="mb-8 transform scale-150"></div>
+                <h2 id="modal-title" class="text-4xl font-black text-center tracking-tighter uppercase"></h2>
+            </div>
+            <div class="w-full md:w-1/2 p-12 flex flex-col justify-between">
+                <div>
+                    <h3 class="text-cyan-400 font-bold mb-4 uppercase tracking-[0.2em] text-[10px]">Introdução ao Pavilhão</h3>
+                    <p id="modal-desc" class="text-slate-400 text-lg leading-relaxed mb-8"></p>
+                </div>
+                <button onclick="enterFullModule()" class="group relative w-full py-5 bg-white text-slate-950 font-black rounded-2xl overflow-hidden transition-all hover:scale-[1.03]">
+                    <span class="relative z-10 flex items-center justify-center gap-2 uppercase tracking-tighter">Entrar no Módulo <i data-lucide="arrow-right"></i></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const interfaces = [
+            { id: 1, title: "Ciência Viva Angola", subtitle: "Física & Saberes Ancestrais", icon: "atom", color: "text-amber-400", bg: "bg-amber-400/10", description: "Onde o som do batuque se torna equação. Explore a acústica harmónica da nossa cultura.", type: "MUSEU INTERATIVO" },
+            { id: 2, title: "Ecossistemas", subtitle: "Gestão Ambiental de Angola", icon: "globe", color: "text-emerald-400", bg: "bg-emerald-400/10", description: "Simulador de impacto climático nas nossas bacias hidrográficas.", type: "SIMULADOR REAL" },
+            { id: 3, title: "Invenções Africanas", subtitle: "Engenharia Histórica", icon: "wrench", color: "text-orange-400", bg: "bg-orange-400/10", description: "Recrie ferramentas de metalurgia e construção dos nossos antepassados.", type: "LAB MAKER" },
+            { id: 4, title: "Corpo Expandido", subtitle: "Biologia & Saúde Pública", icon: "activity", color: "text-rose-400", bg: "bg-rose-400/10", description: "Uma viagem 3D pela saúde preventiva adaptada ao contexto tropical.", type: "EDUTAINMENT" }
+        ];
+
+        let currentActiveId = null;
+
+        function init() {
+            renderGrid();
+            renderWaveBars();
+            lucide.createIcons();
+            startClock();
+            
+            document.getElementById('screensaver').onclick = () => {
+                document.getElementById('screensaver').classList.add('opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    document.getElementById('screensaver').classList.add('hidden');
+                    document.getElementById('dashboard').classList.remove('hidden');
+                }, 700);
+            };
+
+            document.getElementById('input-tension').oninput = updatePhysics;
+            document.getElementById('input-size').oninput = updatePhysics;
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('grid-container');
+            grid.innerHTML = interfaces.map(item => `
+                <div onclick="openModal(${item.id})" class="group relative p-8 rounded-3xl bg-slate-900 border border-slate-800 cursor-pointer transition-all hover:border-cyan-500/50 hover:bg-slate-800/50 hover:-translate-y-2">
+                    <div class="absolute top-4 right-4 text-[10px] font-mono text-slate-700">V.1.0</div>
+                    <div class="p-4 w-fit rounded-2xl ${item.bg} ${item.color} mb-6 transition-transform group-hover:scale-110 group-hover:rotate-6">
+                        <i data-lucide="${item.icon}" class="w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-2xl font-black text-white mb-2 tracking-tighter uppercase">${item.title}</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">${item.subtitle}</p>
+                    <div class="mt-6 pt-6 border-t border-slate-800 flex justify-between items-center">
+                        <span class="text-[9px] font-bold text-slate-600 uppercase tracking-widest">${item.type}</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 text-slate-700 group-hover:text-cyan-500 transition-colors"></i>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function renderWaveBars() {
+            const container = document.getElementById('wave-container');
+            container.innerHTML = Array.from({length: 40}).map((_, i) => 
+                `<div class="wave-bar flex-1 bg-slate-800 rounded-full" style="height: 10%"></div>`
+            ).join('');
+        }
+
+        function openModal(id) {
+            currentActiveId = id;
+            const item = interfaces.find(i => i.id === id);
+            document.getElementById('modal-title').innerText = item.title;
+            document.getElementById('modal-desc').innerText = item.description;
+            document.getElementById('modal-icon').innerHTML = `<i data-lucide="${item.icon}" class="w-32 h-32 ${item.color} animate-pulse"></i>`;
+            document.getElementById('modal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+
+        function enterFullModule() {
+            if (currentActiveId === 1) {
+                closeModal();
+                document.getElementById('dashboard').classList.add('hidden');
+                document.getElementById('module-01-view').classList.remove('hidden');
+                updatePhysics();
+                lucide.createIcons();
+            } else {
+                alert("Módulo sob curadoria da Afrokódica Systems.");
+            }
+        }
+
+        function backToDashboard() {
+            document.getElementById('module-01-view').classList.add('hidden');
+            document.getElementById('dashboard').classList.remove('hidden');
+        }
+
+        function toggleTeacherMode(show) {
+            const overlay = document.getElementById('teacher-overlay');
+            if(show) {
+                overlay.classList.remove('hidden');
+                lucide.createIcons();
+            } else {
+                overlay.classList.add('hidden');
+            }
+        }
+
+        function updatePhysics() {
+            const tension = document.getElementById('input-tension').value;
+            const size = document.getElementById('input-size').value;
+            
+            document.getElementById('val-tension').innerText = tension;
+            document.getElementById('val-size').innerText = size;
+
+            // Frequência f = (k / r) * sqrt(T)
+            const freq = ((Math.sqrt(tension) * 20) / (size / 10)).toFixed(1);
+            document.getElementById('val-freq').innerText = freq + " Hz";
+
+            const bars = document.querySelectorAll('.wave-bar');
+            bars.forEach((bar, index) => {
+                // Simulação de harmónicos
+                const factor = Math.sin(index * 0.3 + (Date.now() / 1000)) * (freq / 4);
+                const height = Math.max(10, 20 + factor);
+                bar.style.height = Math.min(height, 100) + "%";
+                bar.style.backgroundColor = `rgba(245, 158, 11, ${0.1 + (freq/500)})`;
+            });
+        }
+
+        function playPulse() {
+            const drum = document.getElementById('drum-surface');
+            const ripple = document.getElementById('wave-ripple');
+            
+            // Efeito visual de impacto
+            drum.classList.add('bg-amber-500/20');
+            ripple.style.transform = 'scale(20)';
+            ripple.style.opacity = '1';
+            ripple.style.transition = 'none';
+
+            setTimeout(() => {
+                drum.classList.remove('bg-amber-500/20');
+                ripple.style.transition = 'all 0.8s ease-out';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.opacity = '0';
+            }, 50);
+
+            // Animação forte nas barras
+            const bars = document.querySelectorAll('.wave-bar');
+            bars.forEach(bar => {
+                bar.style.height = "100%";
+                bar.style.backgroundColor = "#f59e0b";
+            });
+
+            setTimeout(updatePhysics, 200);
+        }
+
+        function startClock() {
+            setInterval(() => {
+                document.getElementById('clock').innerText = new Date().toLocaleTimeString('pt-PT');
+            }, 1000);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
